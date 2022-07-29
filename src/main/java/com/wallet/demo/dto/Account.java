@@ -1,6 +1,7 @@
 package com.wallet.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wallet.demo.persistence.AccountEntity;
 
 /**
  * A DTO describing an account.
@@ -18,9 +19,9 @@ public class Account {
     @JsonProperty("balance")
     private double balance;
 
-    public Account(int accountId, String accountName, double balance) {
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.balance = balance;
+    public Account(AccountEntity account) {
+        this.accountId = account.getAccountId();
+        this.accountName = account.getAccountName();
+        this.balance = account.getBalance();
     }
 }
