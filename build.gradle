@@ -19,7 +19,7 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'com.h2database:h2'
 
 	// Async Http Client.
 	implementation 'org.asynchttpclient:async-http-client:2.12.3'
@@ -29,7 +29,6 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 	testImplementation "org.testcontainers:testcontainers:1.16.2"
-	testImplementation "org.testcontainers:mysql:1.16.2"
 	testImplementation "org.testcontainers:junit-jupiter:1.16.2"
 
 }

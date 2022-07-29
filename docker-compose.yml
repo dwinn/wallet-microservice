@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  java-rest-service:
+    image: dwinn/java-rest-service-wallet:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - DB_URL=jdbc:h2:mem:demo
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
