@@ -15,11 +15,11 @@ import javax.persistence.Table;
 public class AccountEntity {
 
     @Id
-    @Column(name = "account_id")
-    private int accountId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "account_name")
-    private String accountName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "balance")
     private double balance;
@@ -28,26 +28,26 @@ public class AccountEntity {
         // Default constructor for hibernate.
     }
 
-    public AccountEntity(int accountId, String accountName, double balance) {
-        this.accountId = accountId;
-        this.accountName = accountName;
+    public AccountEntity(int id, String name, double balance) {
+        this.id = id;
+        this.name = name;
         this.balance = balance;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public int getId() {
+        return id;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getName() {
+        return name;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getBalance() {

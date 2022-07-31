@@ -18,18 +18,18 @@ public class Transaction {
     @JsonProperty("account_id")
     private int accountId;
 
-    @JsonProperty("funds")
-    private double funds;
+    @JsonProperty("amount")
+    private double amount;
 
     @JsonProperty("transaction_type")
     private String transactionType;
 
     // @JsonCreator is a newer method of doing the no arg constructor for deserialization.
     @JsonCreator
-    public Transaction(UUID transactionId, int accountId, double funds, String transactionType) {
+    public Transaction(UUID transactionId, int accountId, double amount, String transactionType) {
         this.transactionId = transactionId;
         this.accountId = accountId;
-        this.funds = funds;
+        this.amount = amount;
         this.transactionType = transactionType;
     }
 }

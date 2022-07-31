@@ -30,9 +30,9 @@ public class AccountController {
         accountService.createAccount(account);
     }
 
-    @GetMapping(value = "/account/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Account getBalance(@PathVariable("accountId") int accountId) {
-        return accountService.getBalance(accountId);
+    @GetMapping(value = "/account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Account getBalance(@PathVariable("id") int id) {
+        return accountService.getBalance(id);
     }
 
     // Helpful for debugging bad requests in end points.

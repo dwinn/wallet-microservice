@@ -2,6 +2,7 @@ package com.wallet.demo.service;
 
 import com.wallet.demo.dto.Account;
 import com.wallet.demo.exception.AccountNotFoundException;
+import com.wallet.demo.exception.DuplicateAccountException;
 import com.wallet.demo.persistence.AccountEntity;
 import com.wallet.demo.persistence.AccountRepository;
 import org.dozer.Mapper;
@@ -9,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -22,6 +22,7 @@ import java.util.Optional;
 public class AccountService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
+    private static final double DEFAULT_ACCOUNT_BALANCE = 0;
 
     private final AccountRepository accountRepository;
     private final Mapper mapper;
@@ -32,13 +33,17 @@ public class AccountService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public void createAccount(Account account) {
-
+        accountRepository.findByName(account.getName())
+                .ifPresentOrElse(result -> {
+                    throw new DuplicateAccountException(String.format("An account with the name [%s] is already present.", result.getName()));
+                }, () -> accountRepository.save(new AccountEntity(account.getId(), account.getName(), DEFAULT_ACCOUNT_BALANCE)));
     }
 
     public Account getBalance(int accountId) {
-        return accountRepository.findByAccountId(accountId)
+        return accountRepository.findById(accountId)
                 .map(entity -> mapper.map(entity, Account.class))
-                .orElseThrow(() -> new AccountNotFoundException(String.format("Account not founf with account ID. [%d]", accountId)));
+                .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID. [%d]", accountId)));
     }
 }

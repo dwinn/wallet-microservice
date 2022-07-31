@@ -10,18 +10,42 @@ import com.wallet.demo.persistence.AccountEntity;
  */
 public class Account {
 
-    @JsonProperty("account_id")
-    private int accountId;
+    @JsonProperty("id")
+    private int id;
 
-    @JsonProperty("account_name")
-    private String accountName;
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty("balance")
     private double balance;
 
     public Account(AccountEntity account) {
-        this.accountId = account.getAccountId();
-        this.accountName = account.getAccountName();
+        this.id = account.getId();
+        this.name = account.getName();
         this.balance = account.getBalance();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int accountId) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }
