@@ -21,6 +21,8 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 	runtimeOnly 'com.h2database:h2'
 
+	implementation 'net.sf.dozer:dozer:5.5.1'
+
 	// Async Http Client.
 	implementation 'org.asynchttpclient:async-http-client:2.12.3'
 
