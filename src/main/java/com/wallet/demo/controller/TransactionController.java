@@ -1,7 +1,7 @@
 package com.wallet.demo.controller;
 
-import com.wallet.demo.dto.Transaction;
-import com.wallet.demo.dto.TransactionList;
+import com.wallet.demo.models.Transaction;
+import com.wallet.demo.models.TransactionResponse;
 import com.wallet.demo.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Controller for handling calls to the transaction service.
@@ -27,12 +28,12 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping(value = "/transaction", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void handleTransaction(@Valid @RequestBody Transaction transaction) {
-        transactionService.handleTransaction(transaction);
+    public TransactionResponse handleTransaction(@Valid @RequestBody Transaction transaction) {
+        return transactionService.handleTransaction(transaction);
     }
 
     @GetMapping(value = "/transactions/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TransactionList getTransactions(@PathVariable("accountId") int accountId) {
+    public List<Transaction> getTransactions(@PathVariable("accountId") int accountId) {
         return transactionService.getTransactions(accountId);
     }
 

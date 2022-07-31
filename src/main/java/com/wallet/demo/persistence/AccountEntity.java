@@ -1,6 +1,5 @@
 package com.wallet.demo.persistence;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,13 +14,10 @@ import javax.persistence.Table;
 public class AccountEntity {
 
     @Id
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "balance")
     private double balance;
 
     public AccountEntity() {

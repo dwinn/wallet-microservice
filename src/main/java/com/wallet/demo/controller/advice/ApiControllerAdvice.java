@@ -1,6 +1,6 @@
 package com.wallet.demo.controller.advice;
 
-import com.wallet.demo.dto.ApiError;
+import com.wallet.demo.models.ApiError;
 import com.wallet.demo.exception.AccountNotFoundException;
 import com.wallet.demo.exception.DuplicateAccountException;
 import org.springframework.http.HttpStatus;

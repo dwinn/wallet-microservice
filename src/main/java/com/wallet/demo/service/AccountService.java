@@ -1,6 +1,6 @@
 package com.wallet.demo.service;
 
-import com.wallet.demo.dto.Account;
+import com.wallet.demo.models.Account;
 import com.wallet.demo.exception.AccountNotFoundException;
 import com.wallet.demo.exception.DuplicateAccountException;
 import com.wallet.demo.persistence.AccountEntity;
@@ -41,9 +41,15 @@ public class AccountService {
                 }, () -> accountRepository.save(new AccountEntity(account.getId(), account.getName(), DEFAULT_ACCOUNT_BALANCE)));
     }
 
-    public Account getBalance(int accountId) {
+    public Account getAccount(int accountId) {
         return accountRepository.findById(accountId)
                 .map(entity -> mapper.map(entity, Account.class))
                 .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID. [%d]", accountId)));
+    }
+
+    public void save(Account account) {
+        accountRepository.save(mapper.map(account, AccountEntity.class));
+
+        LOGGER.info("Saving account information. [{}]", account);
     }
 }

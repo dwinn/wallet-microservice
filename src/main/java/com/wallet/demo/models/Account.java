@@ -1,7 +1,9 @@
-package com.wallet.demo.dto;
+package com.wallet.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wallet.demo.persistence.AccountEntity;
+
+import javax.validation.constraints.NotEmpty;
 
 /**
  * A DTO describing an account.
@@ -10,12 +12,15 @@ import com.wallet.demo.persistence.AccountEntity;
  */
 public class Account {
 
+    @NotEmpty
     @JsonProperty("id")
     private int id;
 
+    @NotEmpty
     @JsonProperty("name")
     private String name;
 
+    @NotEmpty
     @JsonProperty("balance")
     private double balance;
 

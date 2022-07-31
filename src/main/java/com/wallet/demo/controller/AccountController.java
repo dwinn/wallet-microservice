@@ -1,6 +1,6 @@
 package com.wallet.demo.controller;
 
-import com.wallet.demo.dto.Account;
+import com.wallet.demo.models.Account;
 import com.wallet.demo.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class AccountController {
 
     @GetMapping(value = "/account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Account getBalance(@PathVariable("id") int id) {
-        return accountService.getBalance(id);
+        return accountService.getAccount(id);
     }
 
     // Helpful for debugging bad requests in end points.

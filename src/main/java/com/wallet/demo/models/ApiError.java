@@ -1,4 +1,4 @@
-package com.wallet.demo.dto;
+package com.wallet.demo.models;
 
 /**
  * DTO to store error details.
