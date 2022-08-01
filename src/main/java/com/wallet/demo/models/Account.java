@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wallet.demo.persistence.AccountEntity;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * A DTO describing an account.
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
  */
 public class Account {
 
-    @NotEmpty
+    @NotNull
     @JsonProperty("id")
     private int id;
 
@@ -20,7 +21,6 @@ public class Account {
     @JsonProperty("name")
     private String name;
 
-    @NotEmpty
     @JsonProperty("balance")
     private double balance;
 
@@ -30,11 +30,15 @@ public class Account {
         this.balance = account.getBalance();
     }
 
+    public Account() {
+        // Default constructor for hibernate.
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int accountId) {
+    public void setId(int id) {
         this.id = id;
     }
 

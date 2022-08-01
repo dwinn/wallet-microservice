@@ -1,10 +1,9 @@
 package com.wallet.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wallet.demo.models.enums.TransactionType;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -14,29 +13,31 @@ import java.util.UUID;
  */
 public class Transaction {
 
-    @NotEmpty
+    @NotNull
     @JsonProperty("transaction_id")
     private UUID transactionId;
 
-    @NotEmpty
+    @NotNull
     @JsonProperty("account_id")
     private int accountId;
 
-    @NotEmpty
+    @NotNull
     @JsonProperty("amount")
     private double amount;
 
-    @NotEmpty
+    @NotNull
     @JsonProperty("transaction_type")
     private TransactionType transactionType;
 
-    // @JsonCreator is a newer method of doing the no arg constructor for deserialization.
-    @JsonCreator
     public Transaction(UUID transactionId, int accountId, double amount, TransactionType transactionType) {
         this.transactionId = transactionId;
         this.accountId = accountId;
         this.amount = amount;
         this.transactionType = transactionType;
+    }
+
+    public Transaction() {
+        // Default constructor for hibernate.
     }
 
     public UUID getTransactionId() {

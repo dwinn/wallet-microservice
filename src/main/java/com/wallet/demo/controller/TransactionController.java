@@ -29,11 +29,14 @@ public class TransactionController {
 
     @PostMapping(value = "/transaction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TransactionResponse handleTransaction(@Valid @RequestBody Transaction transaction) {
+        LOGGER.info("Accepting POST /transaction with transaction [{}]", transaction);
+
         return transactionService.handleTransaction(transaction);
     }
 
     @GetMapping(value = "/transactions/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Transaction> getTransactions(@PathVariable("accountId") int accountId) {
+        LOGGER.info("Accepting GET /transactions/{accountId} with accountId [{}]", accountId);
         return transactionService.getTransactions(accountId);
     }
 

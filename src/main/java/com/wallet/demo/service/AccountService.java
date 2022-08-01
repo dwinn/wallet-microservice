@@ -1,8 +1,8 @@
 package com.wallet.demo.service;
 
-import com.wallet.demo.models.Account;
 import com.wallet.demo.exception.AccountNotFoundException;
 import com.wallet.demo.exception.DuplicateAccountException;
+import com.wallet.demo.models.Account;
 import com.wallet.demo.persistence.AccountEntity;
 import com.wallet.demo.persistence.AccountRepository;
 import org.dozer.Mapper;
@@ -42,9 +42,11 @@ public class AccountService {
     }
 
     public Account getAccount(int accountId) {
+
         return accountRepository.findById(accountId)
                 .map(entity -> mapper.map(entity, Account.class))
                 .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID. [%d]", accountId)));
+
     }
 
     public void save(Account account) {

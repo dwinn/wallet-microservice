@@ -8,6 +8,7 @@ import com.wallet.demo.models.TransactionResponse;
 import com.wallet.demo.models.enums.TransactionType;
 import com.wallet.demo.persistence.TransactionEntity;
 import com.wallet.demo.persistence.TransactionRepository;
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Handle API calls from the Transaction controller.
@@ -28,12 +30,15 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
+    private final Mapper mapper;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              AccountService accountService) {
+                              AccountService accountService,
+                              Mapper mapper) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
+        this.mapper = mapper;
     }
 
     @Transactional
@@ -86,8 +91,15 @@ public class TransactionService {
         );
     }
 
+    /**
+     * Get all of the transactions for a given account ID.
+     *
+     * @param accountId The given account ID.
+     * @return A list of {@link Transaction} containing all transactions for an account.
+     */
     public List<Transaction> getTransactions(int accountId) {
-        //TODO: Remove TransactionList class.
-        return null;
+        return transactionRepository.findByAccountId(accountId).stream()
+                .map(entity -> mapper.map(entity, Transaction.class))
+                .collect(Collectors.toList());
     }
 }

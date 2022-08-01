@@ -27,11 +27,15 @@ public class AccountController {
 
     @PostMapping(value = "/account", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createAccount(@Valid @RequestBody Account account) {
+        LOGGER.info("Accepting POST /account with account [{}]", account);
+
         accountService.createAccount(account);
     }
 
     @GetMapping(value = "/account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Account getBalance(@PathVariable("id") int id) {
+    public Account getAccount(@PathVariable("id") int id) {
+        LOGGER.info("Accepting GET /account/{id} with ID [{}]", id);
+
         return accountService.getAccount(id);
     }
 
