@@ -17,7 +17,7 @@ import javax.validation.Valid;
  * @author David Winn
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
@@ -25,14 +25,14 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping(value = "/account", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createAccount(@Valid @RequestBody Account account) {
         LOGGER.info("Accepting POST /account with account [{}]", account);
 
         accountService.createAccount(account);
     }
 
-    @GetMapping(value = "/account/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Account getAccount(@PathVariable("id") int id) {
         LOGGER.info("Accepting GET /account/{id} with ID [{}]", id);
 

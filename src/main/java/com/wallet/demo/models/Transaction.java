@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wallet.demo.models.enums.TransactionType;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 /**
  * DTO describing a single transaction.
@@ -15,7 +14,7 @@ public class Transaction {
 
     @NotNull
     @JsonProperty("transaction_id")
-    private UUID transactionId;
+    private String transactionId;
 
     @NotNull
     @JsonProperty("account_id")
@@ -29,7 +28,7 @@ public class Transaction {
     @JsonProperty("transaction_type")
     private TransactionType transactionType;
 
-    public Transaction(UUID transactionId, int accountId, double amount, TransactionType transactionType) {
+    public Transaction(String transactionId, int accountId, double amount, TransactionType transactionType) {
         this.transactionId = transactionId;
         this.accountId = accountId;
         this.amount = amount;
@@ -40,7 +39,7 @@ public class Transaction {
         // Default constructor for hibernate.
     }
 
-    public UUID getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 

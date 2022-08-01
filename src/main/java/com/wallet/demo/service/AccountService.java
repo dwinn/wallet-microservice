@@ -47,6 +47,8 @@ public class AccountService {
                 .map(entity -> mapper.map(entity, Account.class))
                 .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID. [%d]", accountId)));
 
+        //TODO: Check what happens when account does not exist.
+
     }
 
     public void save(Account account) {

@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.UUID;
 
 /**
  * This entity represents the Transaction table.
@@ -18,7 +17,8 @@ import java.util.UUID;
 public class TransactionEntity {
 
     @Id
-    private UUID id;
+    @Column(name = "transaction_id")
+    private String transactionId;
 
     @Column(name = "account_id")
     private int accountId;
@@ -32,19 +32,19 @@ public class TransactionEntity {
         // Default constructor for hibernate.
     }
 
-    public TransactionEntity(UUID id, int accountId, double amount, TransactionType transactionType) {
-        this.id = id;
+    public TransactionEntity(String transactionId, int accountId, double amount, TransactionType transactionType) {
+        this.transactionId = transactionId;
         this.accountId = accountId;
         this.amount = amount;
         this.transactionType = transactionType;
     }
 
-    public UUID getId() {
-        return id;
+    public String getId() {
+        return transactionId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setId(String id) {
+        this.transactionId = id;
     }
 
     public int getAccountId() {

@@ -19,7 +19,7 @@ import java.util.List;
  * @author David Winn
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
@@ -27,14 +27,14 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    @PostMapping(value = "/transaction", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public TransactionResponse handleTransaction(@Valid @RequestBody Transaction transaction) {
         LOGGER.info("Accepting POST /transaction with transaction [{}]", transaction);
 
         return transactionService.handleTransaction(transaction);
     }
 
-    @GetMapping(value = "/transactions/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/list/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Transaction> getTransactions(@PathVariable("accountId") int accountId) {
         LOGGER.info("Accepting GET /transactions/{accountId} with accountId [{}]", accountId);
         return transactionService.getTransactions(accountId);

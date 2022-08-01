@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset dwinn:1
-CREATE TABLE account (
+CREATE TABLE IF NOT EXISTS account (
                       id int(11) NOT NULL,
                       name VARCHAR(200) NOT NULL,
                       balance double NOT NULL,

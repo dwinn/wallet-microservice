@@ -44,7 +44,7 @@ public class TransactionService {
     @Transactional
     public TransactionResponse handleTransaction(Transaction transactionRequest) {
 
-        Optional<TransactionEntity> result = transactionRepository.findById(transactionRequest.getTransactionId());
+        Optional<TransactionEntity> result = transactionRepository.findByTransactionId(transactionRequest.getTransactionId().toString());
 
         if (result.isPresent()) {
             throw new TransactionExistsException(String.format("A transaction already exists with the [%s] ID.", result.get().getId()));
