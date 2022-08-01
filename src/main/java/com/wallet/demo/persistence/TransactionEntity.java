@@ -1,7 +1,5 @@
 package com.wallet.demo.persistence;
 
-import com.wallet.demo.models.enums.TransactionType;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,24 +24,24 @@ public class TransactionEntity {
     private double amount;
 
     @Column(name = "transaction_type")
-    private TransactionType transactionType;
+    private String transactionType;
 
     public TransactionEntity() {
         // Default constructor for hibernate.
     }
 
-    public TransactionEntity(String transactionId, int accountId, double amount, TransactionType transactionType) {
+    public TransactionEntity(String transactionId, int accountId, double amount, String transactionType) {
         this.transactionId = transactionId;
         this.accountId = accountId;
         this.amount = amount;
         this.transactionType = transactionType;
     }
 
-    public String getId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
-    public void setId(String id) {
+    public void setTransactionId(String id) {
         this.transactionId = id;
     }
 
@@ -63,11 +61,11 @@ public class TransactionEntity {
         this.amount = amount;
     }
 
-    public TransactionType getTransactionType() {
+    public String getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
+    public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
 }

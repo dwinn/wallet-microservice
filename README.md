@@ -17,7 +17,7 @@ This endpoint actually returns all account information, but could be modified to
 
 Sample response:
 
-```
+```json
 {
     "id": 2,
     "name": "Winner Today",
@@ -32,7 +32,7 @@ This endpoint creates a new account. No response is returned.
 
 Sample JSON request:
 
-```
+```json
 {
     "id": 4,
     "name": "Poker Player"
@@ -50,7 +50,7 @@ This endpoint handles a new transaction request, which will either be a CREDIT t
 
 Sample JSON request:
 
-```
+```json
 {
     "transaction_id": "0fa6b8ca-11e4-11ed-861d-0242ac120009",
     "account_id": 2,
@@ -61,7 +61,7 @@ Sample JSON request:
 
 Sample response:
 
-```
+```json
 {
     "transaction_id": "0fa6b8ca-11e4-11ed-861d-0242ac120009",
     "success": true,
@@ -72,6 +72,29 @@ Sample response:
 # POST api/transaction/list/{accountId}
 http://localhost:8080/api/transaction/list/2
 
+This request provides a list of transactions for a given account ID.
+
+Sample JSON response:
+
+```json
+[
+    {
+        "transaction_id": "c00678b6-11d7-11ed-861d-0242ac120002",
+        "account_id": 2,
+        "amount": 10.0,
+        "transaction_type": "DEBIT"
+    },
+    {
+        "transaction_id": "08c8b372-11db-11ed-861d-0242ac120002",
+        "account_id": 2,
+        "amount": 24.52,
+        "transaction_type": "CREDIT"
+    }
+]
+```
+
 ## Further Improvements
 
-Add security.
+Add security to requests.
+Create account ID on backend rather than passed in.
+Use Enum for transaction type. H2 database has issues with it however, as I tried.

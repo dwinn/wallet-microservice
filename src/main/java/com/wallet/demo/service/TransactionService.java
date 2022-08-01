@@ -5,7 +5,6 @@ import com.wallet.demo.exception.TransactionExistsException;
 import com.wallet.demo.models.Account;
 import com.wallet.demo.models.Transaction;
 import com.wallet.demo.models.TransactionResponse;
-import com.wallet.demo.models.enums.TransactionType;
 import com.wallet.demo.persistence.TransactionEntity;
 import com.wallet.demo.persistence.TransactionRepository;
 import org.dozer.Mapper;
@@ -27,6 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
+    public static final String CREDIT = "CREDIT";
+    public static final String DEBIT = "DEBIT";
 
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
@@ -47,7 +48,7 @@ public class TransactionService {
         Optional<TransactionEntity> result = transactionRepository.findByTransactionId(transactionRequest.getTransactionId().toString());
 
         if (result.isPresent()) {
-            throw new TransactionExistsException(String.format("A transaction already exists with the [%s] ID.", result.get().getId()));
+            throw new TransactionExistsException(String.format("A transaction already exists with the [%s] ID.", result.get().getTransactionId()));
         }
 
         Account account = accountService.getAccount(transactionRequest.getAccountId());
@@ -55,14 +56,14 @@ public class TransactionService {
         double newBalance = account.getBalance();
 
         // The player wants to credit their account with funds.
-        if (transactionRequest.getTransactionType().equals(TransactionType.CREDIT)) {
+        if (transactionRequest.getTransactionType().equals(CREDIT)) {
             newBalance = account.getBalance() + transactionRequest.getAmount();
 
             updateBalance(account, transactionRequest, newBalance);
         }
 
         // The player wants to debit money from their account.
-        if (transactionRequest.getTransactionType().equals(TransactionType.DEBIT)) {
+        if (transactionRequest.getTransactionType().equals(DEBIT)) {
             newBalance = account.getBalance() - transactionRequest.getAmount();
 
             // A debit can only occur if it does not take the balance below 0.
@@ -98,7 +99,8 @@ public class TransactionService {
      * @return A list of {@link Transaction} containing all transactions for an account.
      */
     public List<Transaction> getTransactions(int accountId) {
-        return transactionRepository.findByAccountId(accountId).stream()
+        return transactionRepository.findByAccountId(accountId)
+                .stream()
                 .map(entity -> mapper.map(entity, Transaction.class))
                 .collect(Collectors.toList());
     }
