@@ -1,11 +1,11 @@
 package com.wallet.demo.controller;
 
 import com.wallet.demo.models.Account;
+import com.wallet.demo.models.CreateAccountResponse;
 import com.wallet.demo.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +22,18 @@ public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 
+    private final AccountService accountService;
+
     @Autowired
-    private AccountService accountService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createAccount(@Valid @RequestBody Account account) {
+    public CreateAccountResponse createAccount(@Valid @RequestBody Account account) {
         LOGGER.info("Accepting POST /account with account [{}]", account);
 
-        accountService.createAccount(account);
+        return accountService.createAccount(account);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,12 +41,5 @@ public class AccountController {
         LOGGER.info("Accepting GET /account/{id} with ID [{}]", id);
 
         return accountService.getAccount(id);
-    }
-
-    // Helpful for debugging bad requests in end points.
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handle(Exception e) {
-        LOGGER.warn("Returning HTTP 400 Bad Request", e);
     }
 }

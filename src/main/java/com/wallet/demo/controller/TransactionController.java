@@ -6,7 +6,6 @@ import com.wallet.demo.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +23,12 @@ public class TransactionController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 
+    private final TransactionService transactionService;
+
     @Autowired
-    private TransactionService transactionService;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public TransactionResponse handleTransaction(@Valid @RequestBody Transaction transaction) {
@@ -38,12 +41,5 @@ public class TransactionController {
     public List<Transaction> getTransactions(@PathVariable("accountId") int accountId) {
         LOGGER.info("Accepting GET /transactions/{accountId} with accountId [{}]", accountId);
         return transactionService.getTransactions(accountId);
-    }
-
-    // Helpful for debugging bad requests in end points.
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handle(Exception e) {
-        LOGGER.warn("Returning HTTP 400 Bad Request", e);
     }
 }

@@ -7,6 +7,7 @@ The project uses an H2 database, Liquibase, Swagger and Github Actions for CI/CD
 To run, first build the project: `./gradlew clean build`
 Then start up Docker: `docker-compose up --build`
 Access Swagger: `http://localhost:8080/swagger-ui/`
+Database GUI: `http://localhost:8080/h2-console` Login with URL: `jdbc:h2:~/data/demo`, username `sa`, password `password`.
 
 ## Calling Endpoints
 
@@ -97,4 +98,4 @@ Sample JSON response:
 
 Add security to requests.
 Create account ID on backend rather than passed in.
-Use Enum for transaction type. H2 database has issues with it however, as I tried.
+Use Enum for transaction type. Seems H2 database has issues with enums.

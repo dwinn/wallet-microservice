@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Data access for the {@link AccountRepository}, using {@link CrudRepository}.
+ *
+ * @author David Winn
+ */
 @Repository
 public interface AccountRepository extends CrudRepository<AccountEntity, Integer> {
 

@@ -23,4 +23,8 @@ public class TransactionResponse {
         this.success = success;
         this.balance = balance;
     }
+
+    public TransactionResponse() {
+        // Default constructor for hibernate.
+    }
 }

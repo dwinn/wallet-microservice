@@ -1,6 +1,7 @@
 package com.wallet.demo.service;
 
 import com.wallet.demo.exception.InvalidBalanceException;
+import com.wallet.demo.exception.InvalidTransactionTypeException;
 import com.wallet.demo.exception.TransactionExistsException;
 import com.wallet.demo.models.Account;
 import com.wallet.demo.models.Transaction;
@@ -42,11 +43,19 @@ public class TransactionService {
         this.mapper = mapper;
     }
 
+    /**
+     * Handle a CREDIT or DEBIT transaction to an account.
+     *
+     * @param transactionRequest - A request to perform a new transaction on an account.
+     *
+     * @return {@link TransactionResponse} - Success message containing new balance.
+     */
     @Transactional
     public TransactionResponse handleTransaction(Transaction transactionRequest) {
 
-        Optional<TransactionEntity> result = transactionRepository.findByTransactionId(transactionRequest.getTransactionId().toString());
+        Optional<TransactionEntity> result = transactionRepository.findByTransactionId(transactionRequest.getTransactionId());
 
+        // Check if this transaction ID already exists.
         if (result.isPresent()) {
             throw new TransactionExistsException(String.format("A transaction already exists with the [%s] ID.", result.get().getTransactionId()));
         }
@@ -57,14 +66,18 @@ public class TransactionService {
 
         // The player wants to credit their account with funds.
         if (transactionRequest.getTransactionType().equals(CREDIT)) {
-            newBalance = account.getBalance() + transactionRequest.getAmount();
+            newBalance += transactionRequest.getAmount();
 
             updateBalance(account, transactionRequest, newBalance);
+
+            LOGGER.info("The player [{}] has successfully credited their account with [£{}].", account.getName(), transactionRequest.getAmount());
+
+            return (new TransactionResponse(transactionRequest.getTransactionId(), true, newBalance));
         }
 
         // The player wants to debit money from their account.
         if (transactionRequest.getTransactionType().equals(DEBIT)) {
-            newBalance = account.getBalance() - transactionRequest.getAmount();
+            newBalance -= transactionRequest.getAmount();
 
             // A debit can only occur if it does not take the balance below 0.
             if (newBalance <= 0) {
@@ -72,13 +85,16 @@ public class TransactionService {
             }
 
             updateBalance(account, transactionRequest, newBalance);
+
+            LOGGER.info("The player [{}] has successfully debited their account for [£{}].", account.getName(), transactionRequest.getAmount());
+
+            return (new TransactionResponse(transactionRequest.getTransactionId(), true, newBalance));
         }
 
-        return (new TransactionResponse(transactionRequest.getTransactionId(), true, newBalance));
-
-        //TODO: Test what happens with invalid transaction type. May need to handle that here.
+        throw new InvalidTransactionTypeException(String.format("Unknown transaction of type [%s].", transactionRequest.getTransactionType()));
     }
 
+    // Update the account balance.
     private void updateBalance(Account account, Transaction transactionRequest, double balance) {
         account.setBalance(balance);
         accountService.save(account);
@@ -93,11 +109,13 @@ public class TransactionService {
     }
 
     /**
-     * Get all of the transactions for a given account ID.
+     * Get all the transactions for a given account ID.
      *
      * @param accountId The given account ID.
+     *
      * @return A list of {@link Transaction} containing all transactions for an account.
      */
+    @Transactional(readOnly = true)
     public List<Transaction> getTransactions(int accountId) {
         return transactionRepository.findByAccountId(accountId)
                 .stream()
