@@ -34,10 +34,3 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:1.16.2"
 
 }
-
-//test {
-//	testLogging {
-//		events "passed", "skipped", "failed"
-//	}
-//	useJUnitPlatform()
-//}
