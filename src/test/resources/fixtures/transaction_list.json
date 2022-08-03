@@ -1,0 +1,26 @@
+[
+  {
+    "transaction_id": "0fa6b8ca-11e4-11ed-861d-0242ac121144",
+    "account_id": 2,
+    "amount": 10.04,
+    "transaction_type": "DEBIT"
+  },
+  {
+    "transaction_id": "08c8b372-11db-11ed-861d-0242ac120002",
+    "account_id": 2,
+    "amount": 24.52,
+    "transaction_type": "CREDIT"
+  },
+  {
+    "transaction_id": "14a44c06-11db-11ed-861d-0242ac120002",
+    "account_id": 2,
+    "amount": 152.0,
+    "transaction_type": "CREDIT"
+  },
+  {
+    "transaction_id": "190c4316-11db-11ed-861d-0242ac120002",
+    "account_id": 2,
+    "amount": 50.0,
+    "transaction_type": "DEBIT"
+  }
+]

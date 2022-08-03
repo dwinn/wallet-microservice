@@ -37,12 +37,12 @@ public class ApiControllerAdvice {
 	@ExceptionHandler(InvalidBalanceException.class)
 	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 	public ApiError handleInvalidBalanceException(InvalidBalanceException exception) {
-		return new ApiError(HttpStatus.CONFLICT.value(), exception.getMessage());
+		return new ApiError(HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getMessage());
 	}
 
 	@ExceptionHandler(InvalidTransactionTypeException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ApiError handleInvalidTransactionTypeException(InvalidTransactionTypeException exception) {
-		return new ApiError(HttpStatus.CONFLICT.value(), exception.getMessage());
+		return new ApiError(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
 	}
 }

@@ -8,6 +8,8 @@ import com.wallet.demo.service.AccountService;
 import com.wallet.demo.service.TransactionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,9 +25,9 @@ import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -68,6 +70,9 @@ public class AccountControllerTest {
     @Value("classpath:/fixtures/account.json")
     private Resource accountObject;
 
+    @Captor
+    private ArgumentCaptor<Account> accountCaptor;
+
     @Test
     public void testGetAccountIsSuccessful() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -83,7 +88,6 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$.id").value(ACCOUNT_ID))
                 .andExpect(jsonPath("$.name").value(ACCOUNT_NAME))
                 .andExpect(jsonPath("$.balance").value(BALANCE));
-
     }
 
     @Test
@@ -103,6 +107,8 @@ public class AccountControllerTest {
 
     @Test
     public void testCreateAccountSucceeds() throws Exception {
+        doNothing().when(accountService).createAccount(accountCaptor.capture());
+
         MockHttpServletRequestBuilder request = put(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(asString(createAccountRequest))
@@ -110,6 +116,11 @@ public class AccountControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
+
+        final Account capturedRequest = accountCaptor.getValue();
+
+        assertThat(capturedRequest.getId()).isEqualTo(ACCOUNT_ID);
+        assertThat(capturedRequest.getName()).isEqualTo(ACCOUNT_NAME);
     }
 
     @Test

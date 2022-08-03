@@ -31,12 +31,13 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public TransactionResponse handleTransaction(@Valid @RequestBody Transaction transaction) {
         LOGGER.info("Accepting POST /transaction with transaction [{}]", transaction);
 
-        return transactionService.handleTransaction(transaction);
+        TransactionResponse transactionResponse = transactionService.handleTransaction(transaction);
+        return transactionResponse;
     }
 
     @GetMapping(value = "/list/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
