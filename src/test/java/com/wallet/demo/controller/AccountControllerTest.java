@@ -18,21 +18,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,8 +62,11 @@ public class AccountControllerTest {
     @Value("classpath:/fixtures/create_account_request.json")
     private Resource createAccountRequest;
 
-    @Value("classpath:/fixtures/create_account_response.json")
-    private Resource createAccountResponseJson;
+    @Value("classpath:/fixtures/create_account_request_missing_id.json")
+    private Resource createAccountRequestMissingId;
+
+    @Value("classpath:/fixtures/create_account_request_missing_id.json")
+    private Resource createAccountRequestMissingName;
 
     @Value("classpath:/fixtures/account.json")
     private Resource accountObject;
@@ -110,7 +108,7 @@ public class AccountControllerTest {
     public void testCreateAccountSucceeds() throws Exception {
         MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asString(accountObject))
+                .content(asString(createAccountRequest))
                 .accept(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(request)
@@ -118,22 +116,32 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testCreateAccountDiscoversDuplicate() throws Exception {
-        Account account = objectMapper.readValue(asString(accountObject), Account.class);
+    public void testCreateAccountDiscoversDuplicateReturnsConflict() throws Exception {
+        String errorMessage = String.format("An account with the name [%s] is already present.", ACCOUNT_NAME);
 
-        doThrow(new DuplicateAccountException("Test")).when(accountService).createAccount(account);
+        doThrow(new DuplicateAccountException(errorMessage))
+                .when(accountService).createAccount(any(Account.class));
 
         MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asString(accountObject))
+                .content(asString(createAccountRequest))
                 .accept(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(request)
-                .andExpect(status().isCreated());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
+                .andExpect(jsonPath("$.reason").value(errorMessage));
     }
 
     @Test
-    public void testCreateAccountWithMissingIdParameter() {
+    public void testCreateAccountWithMissingIdParameterReturnsBadRequest() throws Exception {
+        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(asString(createAccountRequestMissingId))
+                .accept(MediaType.APPLICATION_JSON_VALUE);
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
 
     }
 

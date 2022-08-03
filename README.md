@@ -1,17 +1,20 @@
-# wallet-microservice
+# Wallet Microservice
 A simple example of a wallet microservice.
 
 The project uses an H2 database, Liquibase, Swagger and Github Actions for CI/CD.
 
 ## Running Locally
 To run, first build the project: `./gradlew clean build`
+
 Then start up Docker: `docker-compose up --build`
+
 Access Swagger: `http://localhost:8080/swagger-ui/`
+
 Database GUI: `http://localhost:8080/h2-console` Login with URL: `jdbc:h2:~/data/demo`, username `sa`, password `password`.
 
 ## Calling Endpoints
 
-# GET: /api/account/{id}
+### GET: /api/account/{id}
 http://localhost:8080/api/account/2
 
 This endpoint actually returns all account information, but could be modified to return just the balance if we want.
@@ -26,7 +29,7 @@ Sample response:
 }
 ```
 
-# POST: /api/account
+### POST: /api/account
 http://localhost:8080/api/account
 
 This endpoint creates a new account. No response is returned.
@@ -44,7 +47,7 @@ This can be checked by calling http://localhost:8080/api/account/4
 
 To be production ready, the ID would be created on account creation rather than sent by the client, to ensure it is unique.
 
-# POST api/transaction
+### POST api/transaction
 http://localhost:8080/api/transaction
 
 This endpoint handles a new transaction request, which will either be a CREDIT to add funds or a DEBIT to take out funds.
@@ -70,7 +73,7 @@ Sample response:
 }
 ```
 
-# POST api/transaction/list/{accountId}
+### POST api/transaction/list/{accountId}
 http://localhost:8080/api/transaction/list/2
 
 This request provides a list of transactions for a given account ID.
@@ -97,5 +100,7 @@ Sample JSON response:
 ## Further Improvements
 
 Add security to requests.
+
 Create account ID on backend rather than passed in.
+
 Use Enum for transaction type. Seems H2 database has issues with enums.
