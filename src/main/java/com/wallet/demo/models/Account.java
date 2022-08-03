@@ -2,6 +2,7 @@ package com.wallet.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wallet.demo.persistence.AccountEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,15 +14,18 @@ import javax.validation.constraints.NotNull;
  */
 public class Account {
 
-    @NotNull
     @JsonProperty("id")
+    @ApiModelProperty(required = true, example = "10")
+    @NotNull
     private int id;
 
-    @NotEmpty
     @JsonProperty("name")
+    @ApiModelProperty(required = true, example = "Best Player 4")
+    @NotEmpty
     private String name;
 
     @JsonProperty("balance")
+    @ApiModelProperty(required = true, example = "5.50")
     private double balance;
 
     public Account(AccountEntity account) {

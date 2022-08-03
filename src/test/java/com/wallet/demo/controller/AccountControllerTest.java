@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,11 +62,8 @@ public class AccountControllerTest {
     @Value("classpath:/fixtures/create_account_request.json")
     private Resource createAccountRequest;
 
-    @Value("classpath:/fixtures/create_account_request_missing_id.json")
-    private Resource createAccountRequestMissingId;
-
-    @Value("classpath:/fixtures/create_account_request_missing_id.json")
-    private Resource createAccountRequestMissingName;
+    @Value("classpath:/fixtures/create_account_request_malformed.json")
+    private Resource createAccountRequestMalformed;
 
     @Value("classpath:/fixtures/account.json")
     private Resource accountObject;
@@ -106,7 +103,7 @@ public class AccountControllerTest {
 
     @Test
     public void testCreateAccountSucceeds() throws Exception {
-        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+        MockHttpServletRequestBuilder request = put(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(asString(createAccountRequest))
                 .accept(MediaType.APPLICATION_JSON_VALUE);
@@ -122,7 +119,7 @@ public class AccountControllerTest {
         doThrow(new DuplicateAccountException(errorMessage))
                 .when(accountService).createAccount(any(Account.class));
 
-        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+        MockHttpServletRequestBuilder request = put(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(asString(createAccountRequest))
                 .accept(MediaType.APPLICATION_JSON_VALUE);
@@ -134,25 +131,14 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testCreateAccountWithMissingIdParameterReturnsBadRequest() throws Exception {
-        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+    public void testCreateAccountWithMalformedJsonReturnsBadRequest() throws Exception {
+        MockHttpServletRequestBuilder request = put(ENDPOINT_CREATE_ACCOUNT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asString(createAccountRequestMissingId))
+                .content(asString(createAccountRequestMalformed))
                 .accept(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest());
-
-    }
-
-    @Test
-    public void testCreateAccountWithMissingNameParameter() {
-
-    }
-
-    @Test
-    public void testCreateAccountWithMalformedJson() {
-
     }
 
     private static String asString(Resource resource) throws Exception {

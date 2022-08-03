@@ -29,7 +29,7 @@ Sample response:
 }
 ```
 
-### POST: /api/account
+### PUT: /api/account
 http://localhost:8080/api/account
 
 This endpoint creates a new account. No response is returned.

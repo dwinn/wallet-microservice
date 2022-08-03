@@ -29,7 +29,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createAccount(@Valid @RequestBody Account account) {
         LOGGER.info("Accepting POST /account with account [{}]", account);
