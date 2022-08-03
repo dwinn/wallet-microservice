@@ -2,6 +2,7 @@ package com.wallet.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wallet.demo.exception.AccountNotFoundException;
+import com.wallet.demo.exception.DuplicateAccountException;
 import com.wallet.demo.models.Account;
 import com.wallet.demo.service.AccountService;
 import com.wallet.demo.service.TransactionService;
@@ -17,13 +18,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +56,8 @@ public class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired ObjectMapper objectMapper;
+
     @MockBean
     private AccountService accountService;
 
@@ -57,7 +68,7 @@ public class AccountControllerTest {
     private Resource createAccountRequest;
 
     @Value("classpath:/fixtures/create_account_response.json")
-    private Resource createAccountResponse;
+    private Resource createAccountResponseJson;
 
     @Value("classpath:/fixtures/account.json")
     private Resource accountObject;
@@ -96,13 +107,29 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testCreateAccountSucceeds() {
+    public void testCreateAccountSucceeds() throws Exception {
+        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(asString(accountObject))
+                .accept(MediaType.APPLICATION_JSON_VALUE);
 
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void testCreateAccountDiscoversDuplicate() {
+    public void testCreateAccountDiscoversDuplicate() throws Exception {
+        Account account = objectMapper.readValue(asString(accountObject), Account.class);
 
+        doThrow(new DuplicateAccountException("Test")).when(accountService).createAccount(account);
+
+        MockHttpServletRequestBuilder request = post(ENDPOINT_CREATE_ACCOUNT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(asString(accountObject))
+                .accept(MediaType.APPLICATION_JSON_VALUE);
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
     }
 
     @Test

@@ -3,7 +3,6 @@ package com.wallet.demo.service;
 import com.wallet.demo.exception.AccountNotFoundException;
 import com.wallet.demo.exception.DuplicateAccountException;
 import com.wallet.demo.models.Account;
-import com.wallet.demo.models.CreateAccountResponse;
 import com.wallet.demo.persistence.AccountEntity;
 import com.wallet.demo.persistence.AccountRepository;
 import org.dozer.Mapper;
@@ -38,11 +37,9 @@ public class AccountService {
      * Create an account, if the account name is unique.
      *
      * @param account The account object that we wish to create.
-     *
-     * @return An {@link CreateAccountResponse} object containing an account ID and success message.
      */
     @Transactional
-    public CreateAccountResponse createAccount(Account account) {
+    public void createAccount(Account account) {
         accountRepository.findByName(account.getName())
                 .ifPresentOrElse(result -> {
                     throw new DuplicateAccountException(String.format("An account with the name [%s] is already present.", result.getName()));
@@ -52,8 +49,6 @@ public class AccountService {
 
                     LOGGER.info("Account successfully created with the name [{}].", account.getName());
                 });
-
-        return new CreateAccountResponse(account.getId(), true);
     }
 
     /**
