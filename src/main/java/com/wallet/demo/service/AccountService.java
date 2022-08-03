@@ -44,8 +44,10 @@ public class AccountService {
                 .ifPresentOrElse(result -> {
                     throw new DuplicateAccountException(String.format("An account with the name [%s] is already present.", result.getName()));
                 }, () -> {
-                    account.setBalance(DEFAULT_ACCOUNT_BALANCE);
-                    this.save(account);
+
+                    this.save(
+                            new AccountEntity(account.getId(), account.getName(), DEFAULT_ACCOUNT_BALANCE)
+                    );
 
                     LOGGER.info("Account successfully created with the name [{}].", account.getName());
                 });
@@ -62,17 +64,17 @@ public class AccountService {
     public Account getAccount(int accountId) {
         return accountRepository.findById(accountId)
                 .map(entity -> mapper.map(entity, Account.class))
-                .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID. [%d]", accountId)));
+                .orElseThrow(() -> new AccountNotFoundException(String.format("Account not found with account ID [%d].", accountId)));
     }
 
     /**
      * Save a new account to the database.
      *
-     * @param account The account object to save to the database.
+     * @param accountEntity The account object to save to the database.
      */
-    public void save(Account account) {
-        accountRepository.save(mapper.map(account, AccountEntity.class));
+    public void save(AccountEntity accountEntity) {
+        accountRepository.save(accountEntity);
 
-        LOGGER.info("Saving account information. [{}]", account);
+        LOGGER.info("Saving account information. [{}]", accountEntity);
     }
 }

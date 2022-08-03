@@ -6,6 +6,7 @@ import com.wallet.demo.exception.TransactionExistsException;
 import com.wallet.demo.models.Account;
 import com.wallet.demo.models.Transaction;
 import com.wallet.demo.models.TransactionResponse;
+import com.wallet.demo.persistence.AccountEntity;
 import com.wallet.demo.persistence.TransactionEntity;
 import com.wallet.demo.persistence.TransactionRepository;
 import org.dozer.Mapper;
@@ -94,10 +95,17 @@ public class TransactionService {
         throw new InvalidTransactionTypeException(String.format("Unknown transaction of type [%s].", transactionRequest.getTransactionType()));
     }
 
-    // Update the account balance.
     private void updateBalance(Account account, Transaction transactionRequest, double balance) {
-        account.setBalance(balance);
-        accountService.save(account);
+        // Update the account balance.
+        accountService.save(
+            new AccountEntity(
+                    account.getId(),
+                    account.getName(),
+                    balance
+            )
+        );
+
+        // Log the transaction.
         transactionRepository.save(
             new TransactionEntity(
                     transactionRequest.getTransactionId(),

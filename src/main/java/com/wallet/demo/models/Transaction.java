@@ -1,6 +1,7 @@
 package com.wallet.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,20 +12,24 @@ import javax.validation.constraints.NotNull;
  */
 public class Transaction {
 
-    @NotNull
     @JsonProperty("transaction_id")
+    @ApiModelProperty(required = true, example = "0fa6b8ca-11e4-11ed-961d-0242ac121144")
+    @NotNull
     private String transactionId;
 
-    @NotNull
+    @ApiModelProperty(required = true, example = "2")
     @JsonProperty("account_id")
+    @NotNull
     private int accountId;
 
-    @NotNull
+    @ApiModelProperty(required = true, example = "50.30")
     @JsonProperty("amount")
+    @NotNull
     private double amount;
 
-    @NotNull
+    @ApiModelProperty(required = true, example = "CREDIT")
     @JsonProperty("transaction_type")
+    @NotNull
     private String transactionType;
 
     public Transaction(String transactionId, int accountId, double amount, String transactionType) {
