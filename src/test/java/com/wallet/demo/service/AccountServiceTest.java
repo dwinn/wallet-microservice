@@ -44,9 +44,6 @@ public class AccountServiceTest {
     @Captor
     private ArgumentCaptor<AccountEntity> accountEntityArgumentCaptor;
 
-    @Captor
-    private ArgumentCaptor<Account> accountArgumentCaptor;
-
     @Mock
     private AccountEntity mockAccountEntity;
 
