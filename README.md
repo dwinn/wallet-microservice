@@ -1,7 +1,7 @@
 # Wallet Microservice
-A simple example of a wallet microservice.
+This demo is a simple example of a wallet microservice in Java with Spring Boot 2.6.10.
 
-The project uses an H2 database, Liquibase, Swagger and Github Actions for CI/CD.
+The project also uses an H2 database, Liquibase, Swagger and Github Actions.
 
 ## Running Locally
 To run, first build the project: `./gradlew clean build`
@@ -14,10 +14,31 @@ Database GUI: `http://localhost:8080/h2-console` Login with URL: `jdbc:h2:~/data
 
 ## Calling Endpoints
 
+### PUT: /api/account
+http://localhost:8080/api/account
+`curl -X PUT "http://localhost:8080/api/account" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"balance\": 5.5, \"id\": 10, \"name\": \"Poker Player 10\"}"`
+
+This endpoint creates a new account. No response is returned.
+
+Sample JSON request:
+
+```json
+{
+    "id": 10,
+    "name": "Poker Player 10"
+}
+```
+
+This can then be checked by calling http://localhost:8080/api/account/4
+`curl -X GET "http://localhost:8080/api/account/10" -H "accept: application/json"`
+
+To be production ready, the ID would be created on account creation rather than sent by the client, to ensure it is unique.
+
 ### GET: /api/account/{id}
 http://localhost:8080/api/account/2
+`curl -X GET "http://localhost:8080/api/account/2" -H "accept: application/json"`
 
-This endpoint actually returns all account information, but could be modified to return just the balance if we want.
+This endpoint returns all account information, but could be modified to return just the balance for example.
 
 Sample response:
 
@@ -29,26 +50,9 @@ Sample response:
 }
 ```
 
-### PUT: /api/account
-http://localhost:8080/api/account
-
-This endpoint creates a new account. No response is returned.
-
-Sample JSON request:
-
-```json
-{
-    "id": 4,
-    "name": "Poker Player"
-}
-```
-
-This can be checked by calling http://localhost:8080/api/account/4
-
-To be production ready, the ID would be created on account creation rather than sent by the client, to ensure it is unique.
-
-### POST api/transaction
+### PUT api/transaction
 http://localhost:8080/api/transaction
+`curl -X PUT "http://localhost:8080/api/transaction" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"account_id\": 2, \"amount\": 50.3, \"transaction_id\": \"0fa6b8ca-11e4-11ed-961d-0242ac121144\", \"transaction_type\": \"CREDIT\"}"`
 
 This endpoint handles a new transaction request, which will either be a CREDIT to add funds or a DEBIT to take out funds.
 
@@ -58,7 +62,7 @@ Sample JSON request:
 {
     "transaction_id": "0fa6b8ca-11e4-11ed-861d-0242ac120009",
     "account_id": 2,
-    "amount": 100,
+    "amount": 50.3,
     "transaction_type": "CREDIT"
 }
 ```
@@ -69,12 +73,13 @@ Sample response:
 {
     "transaction_id": "0fa6b8ca-11e4-11ed-861d-0242ac120009",
     "success": true,
-    "balance": 110.34
+    "balance": 110.64
 }
 ```
 
-### POST api/transaction/list/{accountId}
+### GET api/transaction/list/{accountId}
 http://localhost:8080/api/transaction/list/2
+`curl -X GET "http://localhost:8080/api/transaction/list/2" -H "accept: application/json"`
 
 This request provides a list of transactions for a given account ID.
 
